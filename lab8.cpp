@@ -97,31 +97,97 @@ public:
 
 //z3
 class Pizza {
-
+    vector<std::string> parts;
 public:
-    class Builder {
+    Pizza(){}
 
+    class Builder
+    {
+        Pizza* product;
     public:
-        Builder& setDough() {
-
+        Builder()
+        {
+            this->Reset();
+        }
+        ~Builder()
+        {
+            delete product;
+        }
+        void Reset()
+        {
+            this->product= new Pizza();
         }
 
-        Builder& setSauce() {
-
+        Builder& setDough()
+        {
+            this->product->parts.push_back("ciasto pszeniczne");
         }
 
-        Builder& setTopping() {
-
+        Builder& setSauce()
+        {
+            this->product->parts.push_back("sos pomidorowy");
         }
 
-        Pizza build() {
+        Builder& setTopping()
+        {
+            this->product->parts.push_back("ser, pomidor, oregano");
+        }
 
+        Pizza* build()//* - dodana
+        {
+            Pizza* result = (this->product);
+            this->Reset();
+            return result;
+        }
+    };
+    class Director
+    {
+        //@var Builder
+    private:
+        Builder* builder;
+    /**
+     * The Director works with any builder instance that the client code passes
+     * to it. This way, the client code may alter the final type of the newly
+     * assembled product.
+     */
+    public:
+        void set_builder(Builder* builder)
+        {
+            this->builder=builder;
+        }
+    /**
+     * The Director can construct several product variations using the same
+     * building steps.
+     */
+        void BuildMinimalViableProduct()
+        {
+            this->builder->setDough();
+        }
+    
+        void BuildFullFeaturedProduct()
+        {
+            this->builder->setDough();
+            this->builder->setSauce();
+            this->builder->setTopping();
+            //this->builder->set();
         }
     };
 
 
-    void display() const {
-
+    void display()const
+    {
+        cout << "Części pizzy: ";
+        for (size_t i=0; i<parts.size(); i++)
+        {
+            if(parts[i]== parts.back()){
+                cout << parts[i];
+            }
+            else
+            {
+                cout << parts[i] << ", ";
+            }
+        }
+        cout << "\n\n"; 
     }
 };
 
@@ -151,9 +217,33 @@ void z2()
     //cin.get();
 }
 
-void z3()
+void z3(Pizza::Director& director)
 {
+    Pizza::Builder* builder = new Pizza::Builder();
+    director.set_builder(builder);
+    cout << "niepełny produkt:\n"; 
+    director.BuildMinimalViableProduct();
+    
+    Pizza* p= builder->build();
+    p->display();
+    delete p;
 
+    cout << "Standard full featured product:\n"; 
+    director.BuildFullFeaturedProduct();
+
+    p= builder->build();
+    p->display();
+    delete p;
+
+    // Remember, the Builder pattern can be used without a Director class.
+    cout << "Custom product:\n";
+    builder->setDough();
+    builder->setTopping();
+    p=builder->build();
+    p->display();
+    delete p;
+
+    delete builder;
 }
 
 int main()
@@ -173,7 +263,9 @@ int main()
             z2();
             break;
         default:
-            z3();
+            Pizza::Director* director= new Pizza::Director();
+            z3(*director);
+            delete director;
             break;
         }
         cout << "Czy chcesz kontynuacji?(T/N)";
