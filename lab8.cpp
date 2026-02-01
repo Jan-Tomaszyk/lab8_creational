@@ -86,10 +86,10 @@ public:
         switch(tt)
         {
             case Vehicle::VehicleType::Car:
-                std::cout<<"Buduje samochód!"<<std::endl;
+                cout<<"Buduje samochód!"<<std::endl;
                 return new Car();
             case Vehicle::VehicleType::Bike:
-                std::cout<<"Buduje Rower!"<<std::endl;
+                cout<<"Buduje Rower!"<<std::endl;
                 return new Bike();
         }
     }
