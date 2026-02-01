@@ -103,8 +103,8 @@ public class Main {
                 "Three objects point to the same memory location on the heap i.e, to the same object");
         }
 
-        else {
-            
+        else
+        {    
             System.out.println(
                 "Three objects DO NOT point to the same memory location on the heap");
         }
